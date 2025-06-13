@@ -159,7 +159,8 @@ export function CalendarPage({ user }) {
         layoutColor
       });
     }
-
+console.log(days);
+    console.log(leaveColors)
     return days;
   };
 
