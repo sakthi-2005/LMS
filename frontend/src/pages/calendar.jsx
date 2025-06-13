@@ -40,7 +40,6 @@ export function CalendarPage({ user }) {
         .get("/leave/calendarLeaves", { params: { userId: user.id } })
         .then((response) => {
           setLoading(false);
-          console.log(response.data.leaves);
           setUserLeaves(response.data.leaves);
         })
         .catch((err) => {
@@ -129,15 +128,30 @@ export function CalendarPage({ user }) {
       let isLayout = false;
       let layoutColor = '#000';
       let isToday = false;
+      let isLayoutStart = false;
+      let isLayoutEnd = false;
       let color = leaveColors.Default;
       if (leaves.length == 1) {
         isLayout = true ; 
-        console.log(leaveColors[leaves[0].Type]);
         layoutColor = leaveColors[leaves[0].Type];
+        if(new Date(leaves[0].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE") ){
+          isLayoutStart = true;
+        }
+        if(new Date(leaves[0].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
+          isLayoutEnd = true;
+        }
       }
       else if (leaves.length > 1) {
         isLayout = true;
         layoutColor = leaveColors.Multiple;
+        for(let i=0;i<leaves.length;i++){
+          if(new Date(leaves[i].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE") ){
+            isLayoutStart = true;
+          }
+          if(new Date(leaves[i].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
+            isLayoutEnd = true;
+          }
+        }
       }
       else if (isHoliday) {
         color = leaveColors.Holiday;
@@ -157,11 +171,11 @@ export function CalendarPage({ user }) {
         color,
         holidayName,
         isLayout,
-        layoutColor
+        layoutColor,
+        isLayoutStart,
+        isLayoutEnd
       });
     }
-console.log(days);
-    console.log(leaveColors)
     return days;
   };
 
@@ -219,7 +233,7 @@ console.log(days);
             style={{position: 'relative', backgroundColor: day?.color || "transparent", outline: (day?.isToday ? '1.5px solid brown' : 0)}}
             onClick={() => day && setSelectedDay(day)}
           >
-            {day && day.isLayout && <span style={{position:'absolute',top:0,bottom:0,left:0,right:0,backgroundColor:day.layoutColor,textAlign:'center',opacity:((day.isHoliday || day.isWeekend) ? 0.6 : 1), mixBlendMode: 'overlay'}}>{day.label}</span>}
+            {day && day.isLayout && <span style={{position:'absolute',top:0,bottom:0,left:0,right:0,backgroundColor:day.layoutColor,textAlign:'center',opacity:((day.isHoliday || day.isWeekend) ? 0.6 : 1), mixBlendMode: 'overlay', borderRadius: `${day.isLayoutStart ? '1rem' : '0'} ${day.isLayoutEnd ? '1rem' : '0'} ${day.isLayoutEnd ? '1rem' : '0'} ${day.isLayoutStart ? '1rem' : '0'}`}}>{day.label}</span>}
             {day && !day.isLayout && day.label}
           </div>
         ))}
@@ -235,12 +249,10 @@ console.log(days);
       </div>
       {selectedDay &&
         (selectedDay.isHoliday ||
-          selectedDay.isWeekend ||
-          selectedDay.leaves.length > 0 ||
-          selectedDay.date == new Date().toISOString().split("T")[0]) && (
+          selectedDay.leaves.length > 0 ) && (
           <div className="day-details">
             <h3>{new Date(selectedDay.date).toLocaleDateString("en-GB")}</h3>
-            {selectedDay.leaves.length > 0 ? (
+            {selectedDay.leaves.length > 0 && (
               <ul>
                 {selectedDay.leaves.map((leave, i) => (
                   <li key={i}>
@@ -248,13 +260,11 @@ console.log(days);
                   </li>
                 ))}
               </ul>
-            ) : selectedDay.isHoliday ? (
+            ) } 
+
+            { selectedDay.isHoliday && (
               <p>{selectedDay.holidayName}</p>
-            ) : selectedDay.isWeekend ? (
-              <p>This day is a weekend.</p>
-            ) : (
-              <p>No leaves Today</p>
-            )}
+            ) }
             <button onClick={() => setSelectedDay(null)}>Close</button>
           </div>
         )}
