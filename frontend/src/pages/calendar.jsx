@@ -137,7 +137,7 @@ export function CalendarPage({ user }) {
         if(new Date(leaves[0].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE") ){
           isLayoutStart = true;
         }
-        if(new Date(leaves[0].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
+        if(new Date(leaves[0].to_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
           isLayoutEnd = true;
         }
       }
@@ -148,7 +148,7 @@ export function CalendarPage({ user }) {
           if(new Date(leaves[i].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE") ){
             isLayoutStart = true;
           }
-          if(new Date(leaves[i].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
+          if(new Date(leaves[i].to_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
             isLayoutEnd = true;
           }
         }
