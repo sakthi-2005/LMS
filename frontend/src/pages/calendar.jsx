@@ -40,7 +40,6 @@ export function CalendarPage({ user }) {
         .get("/leave/calendarLeaves", { params: { userId: user.id } })
         .then((response) => {
           setLoading(false);
-          console.log(response.data.leaves);
           setUserLeaves(response.data.leaves);
         })
         .catch((err) => {
@@ -177,7 +176,6 @@ export function CalendarPage({ user }) {
         isLayoutEnd
       });
     }
-
     return days;
   };
 
