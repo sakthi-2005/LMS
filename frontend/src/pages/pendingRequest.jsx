@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchPendingRequest } from "../utils/pendingRequests";
 import { ReviewScreen } from "../components/reviewScreen";
-import Spinner from "../example/loaders/Spinner";
+import Spinner from "../utils/Spinner";
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString("de-DE");

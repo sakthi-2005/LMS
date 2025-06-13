@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Spinner from "../example/loaders/Spinner";
+import Spinner from "../utils/Spinner";
 
 export function Profile({ setUser }) {
   const [isEditingPassword, setIsEditingPassword] = useState(false);

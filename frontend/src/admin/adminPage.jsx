@@ -4,7 +4,7 @@ import "../App.css";
 import UserModal from "./userModal";
 import LeaveModal from "./leaveModal";
 import { Profile } from "../pages/profile.jsx";
-import Spinner from "../example/loaders/Spinner.jsx";
+import Spinner from "../utils/Spinner.jsx";
 
 
 export function Admin({ setUser }) {
