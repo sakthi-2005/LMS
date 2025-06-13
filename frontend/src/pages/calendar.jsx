@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Spinner from '../example/loaders/Spinner'
+import Spinner from '../utils/Spinner'
+
+let colour_arr = [];
 
 const leaveColors = {
   Holiday: "#45aaf2",
@@ -8,6 +10,8 @@ const leaveColors = {
   Today: "#00b894",
   Multiple: "#ff6b6b",
 };
+
+for(let i=0;i<20;i++)colour_arr.push(getRandomColor());
 
 function getRandomColor() {
   const letters = "0123456789ABCDEF";
@@ -69,8 +73,8 @@ export function CalendarPage({ user }) {
         .get("/admin/allLeaves")
         .then((response) => {
           setLoading(false);
-          response.data.leaves.forEach((leave) => {
-            leaveColors[leave.name] = getRandomColor();
+          response.data.leaves.forEach((leave,i) => {
+            leaveColors[leave.name] = colour_arr[i]
           });
         })
         .catch((err) => {
@@ -113,39 +117,46 @@ export function CalendarPage({ user }) {
       let leaves = [];
 
       if (userLeaves != null && userLeaves.length != 0) {
-        console.log(
-          dateStr,
-          userLeaves[0].from_date,
-          new Date(userLeaves[0].from_date).toLocaleDateString("de-DE"),
-        );
         leaves = userLeaves.filter(
           (leave) =>
             new Date(leave.from_date).toLocaleDateString("de-DE") <=
               new Date(dateStr).toLocaleDateString("de-DE") &&
             new Date(leave.to_date).toLocaleDateString("de-DE") >=
-              new Date(dateStr).toLocaleDateString("de-DE") &&
-            !isHoliday &&
-            !isWeekend,
+              new Date(dateStr).toLocaleDateString("de-DE")
         );
       }
 
+      let isLayout = false;
+      let layoutColor = '#000';
+      let isToday = false;
       let color = leaveColors.Default;
-      if (leaves.length == 1) color = leaveColors[leaves[0].Type]
-      else if (leaves.length > 1) color = leaveColors.Multiple;
+      if (leaves.length == 1) {
+        isLayout = true ; 
+        layoutColor = leaveColors[leaves[0].type];
+      }
+      else if (leaves.length > 1) {
+        isLayout = true;
+        layoutColor = leaveColors.Multiple;
+      }
       else if (isHoliday) {
         color = leaveColors.Holiday;
       } else if (isWeekend) color = leaveColors.Weekend;
-      if (dateStr == new Date().toISOString().split("T")[0])
+      if (dateStr == new Date().toISOString().split("T")[0]){
         color = leaveColors.Today;
+        isToday = true;
+      }
 
       days.push({
         date: dateStr,
+        isToday,
         label: d,
         isHoliday,
         isWeekend,
         leaves,
         color,
         holidayName,
+        isLayout,
+        layoutColor
       });
     }
 
@@ -203,10 +214,11 @@ export function CalendarPage({ user }) {
           <div
             key={idx}
             className="calendar-cell"
-            style={{ backgroundColor: day?.color || "transparent" }}
+            style={{position: 'relative', backgroundColor: day?.color || "transparent", outline: (day?.isToday ? '1.5px solid brown' : 0)}}
             onClick={() => day && setSelectedDay(day)}
           >
-            {day ? day.label : ""}
+            {day && day.isLayout && <span style={{position:'absolute',top:0,bottom:0,left:0,right:0,backgroundColor:day.layoutColor,textAlign:'center',opacity:((day.isHoliday || day.isWeekend) ? 0.6 : 1), mixBlendMode: 'overlay'}}>{day.label}</span>}
+            {day && !day.isLayout && day.label}
           </div>
         ))}
       </div>

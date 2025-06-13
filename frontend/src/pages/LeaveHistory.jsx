@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Spinner from "../example/loaders/Spinner";
+import Spinner from "../utils/Spinner";
 
 export function LeaveHistory({ user }) {
   const [leaveHistory, setLeaveHistory] = useState([]);
