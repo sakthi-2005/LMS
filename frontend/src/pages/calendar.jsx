@@ -132,6 +132,7 @@ export function CalendarPage({ user }) {
       let color = leaveColors.Default;
       if (leaves.length == 1) {
         isLayout = true ; 
+        console.log(leaveColors[leaves[0].type]);
         layoutColor = leaveColors[leaves[0].type];
       }
       else if (leaves.length > 1) {
