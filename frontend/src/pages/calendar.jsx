@@ -256,7 +256,8 @@ export function CalendarPage({ user }) {
               <ul>
                 {selectedDay.leaves.map((leave, i) => (
                   <li key={i}>
-                    <strong>{leave.u_name}</strong> - {leave.Type}
+                    <strong>{leave.u_name}</strong> - {leave.Type} <br />
+                    <p>{new Date(leave.from_date).toLocaleDateString("de-DE")} - {new Date(leave.to_date).toLocaleDateString("de-DE")}</p>
                   </li>
                 ))}
               </ul>
