@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { Brackets } = require("typeorm");
 const {
   UserRepo,
   LeaveTypeRepo,
@@ -7,8 +8,28 @@ const {
   RequestHistoryRepo,
 } = require("../config/db");
 
-// Get leave balance for a user
 router.post("/request", async (req, res) => {
+
+  const overlappingLeave = await LeaveRequestRepo
+  .createQueryBuilder("leave")
+  .where("leave.user_id = :userId", { userId: req.body.userId })
+  .andWhere("leave.status IN (:...statuses)", { statuses: ['pending', 'accepted'] })
+  .andWhere(
+    new Brackets(qb => {
+      qb.where("leave.from_date BETWEEN :fromDate AND :toDate")
+        .orWhere("leave.to_date BETWEEN :fromDate AND :toDate")
+        .orWhere(":fromDate BETWEEN leave.from_date AND leave.to_date")
+        .orWhere(":toDate BETWEEN leave.from_date AND leave.to_date");
+    })
+  )
+  .setParameters({ fromDate: req.body.from, toDate: req.body.to })
+  .getOne();
+
+  if(overlappingLeave){
+    res.json({ status: "overlapping Leave not allowed" });
+    return;
+  }
+
   let type = req.body.type;
   let b = await getuserDetails(req.body.userId);
   let a = await getstepsRequired(type, b.role_id);
@@ -18,7 +39,6 @@ router.post("/request", async (req, res) => {
       .select("MAX(lr.id) + 1", "next_id")
       .getRawOne();
 
-    console.log(a, b);
 
     const request = await LeaveRequestRepo.save({
       id: id.next_id || 1,

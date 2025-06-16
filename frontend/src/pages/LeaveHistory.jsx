@@ -114,7 +114,7 @@ export function LeaveHistory({ user }) {
                     ></progress>
                   </td>
                   <td>
-                    {leave.approved_by_name || leave.rejected_by_name || "-"}
+                    {leave.approver || leave.rejector || "-"}
                   </td>
                   <td>{leave.rejection_reason || "-"}</td>
                   <td>{leave.no_of_days}</td>

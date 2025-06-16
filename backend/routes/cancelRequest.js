@@ -19,7 +19,7 @@ router.delete("/deleteRequest", async (req, res) => {
 
 
     if (leaveRequest.status === "approved") {
-      let leave_used = 0;
+      let leave_remaining = 0;
       if(leaveRequest.from_date < new Date()) {
         if(leaveRequest.to_date < new Date()) {
           throw new Error("Cannot cancel leave request that has already completed");
@@ -34,14 +34,14 @@ router.delete("/deleteRequest", async (req, res) => {
               count++;
             }
           }
-          leave_used = count;
+          leave_remaining = count;
         }
       }
       await LeaveBalanceRepo.createQueryBuilder()
         .update("leave_balances")
         .set({
-          balance: () => `balance + ${leaveRequest.no_of_days - leave_used}`,
-          leave_taken: () => `leave_taken - ${leaveRequest.no_of_days - leave_used}`,
+          balance: () => `balance + ${leave_remaining}`,
+          leave_taken: () => `leave_taken - ${leave_remaining}`,
         })
         .where("user_id = :userId", { userId: leaveRequest.user.id })
         .andWhere("leave_type_id = :leaveTypeId", {

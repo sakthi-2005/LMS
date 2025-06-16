@@ -117,11 +117,10 @@ export function CalendarPage({ user }) {
 
       if (userLeaves != null && userLeaves.length != 0) {
         leaves = userLeaves.filter(
-          (leave) =>
-            new Date(leave.from_date).toLocaleDateString("de-DE") <=
-              new Date(dateStr).toLocaleDateString("de-DE") &&
-            new Date(leave.to_date).toLocaleDateString("de-DE") >=
-              new Date(dateStr).toLocaleDateString("de-DE")
+          (leave) =>(new Date(leave.from_date) <=
+              new Date(new Date(dateStr).setHours(0, 0, 0, 0)) &&
+            new Date(leave.to_date) >=
+              new Date(new Date(dateStr).setHours(0, 0, 0, 0)))
         );
       }
 
