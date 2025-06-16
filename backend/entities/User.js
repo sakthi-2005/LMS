@@ -29,6 +29,11 @@ const User = new EntitySchema({
     isAdmin: {
       type: Boolean,
     },
+    isDeleted: {
+      type : Date,
+      nullable: true,
+      deleteDate: true,
+    }
   },
   relations: {
     manager: {
@@ -88,6 +93,7 @@ const User = new EntitySchema({
       inverseSide: "manager",
     },
   },
+  deleteDate: 'isDeleted',
 });
 
 module.exports = { User };

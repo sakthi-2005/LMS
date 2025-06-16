@@ -1,4 +1,4 @@
-const { EntitySchema } = require("typeorm");
+const { EntitySchema, Timestamp } = require("typeorm");
 
 const LeaveBalance = new EntitySchema({
   name: "LeaveBalance",
@@ -25,6 +25,11 @@ const LeaveBalance = new EntitySchema({
       type: Number,
       default: 0,
     },
+    isDeleted: {
+      type: Date,
+      nullable: true,
+      deleteDate: true,
+    }
   },
   relations: {
     user: {

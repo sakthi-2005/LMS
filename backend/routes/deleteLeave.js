@@ -8,7 +8,6 @@ router.delete("/deleteLeave", async (req, res) => {
 
   try {
     await LeaveTypeRepo.delete({ id: Id });
-    // await db.query(`DELETE FROM leaves WHERE id = ?;`,[Id]);
 
     res.json({ status: "deleted" });
   } catch (err) {

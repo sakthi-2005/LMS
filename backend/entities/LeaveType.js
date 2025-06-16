@@ -23,6 +23,11 @@ const LeaveType = new EntitySchema({
     conformation_steps: {
       type: Number,
     },
+    isDeleted: {
+      type : Date,
+      nullable: true,
+      deleteDate: true,
+    }
   },
   relations: {
     leaveRequests: {
@@ -44,6 +49,7 @@ const LeaveType = new EntitySchema({
       inverseSide: "leaveTypes",
     },
   },
+  deleteDate: 'isDeleted',
 });
 
 module.exports = { LeaveType };

@@ -71,6 +71,11 @@ const LeaveRequest = new EntitySchema({
       type: Date,
       nullable: false,
     },
+    isDeleted: {
+      type : Date,
+      nullable: true,
+      deleteDate: true,
+    }
   },
   relations: {
     user: {

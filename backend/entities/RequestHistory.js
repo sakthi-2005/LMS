@@ -38,6 +38,11 @@ const RequestHistory = new EntitySchema({
       default: () => "CURRENT_TIMESTAMP",
       updateDate: true,
     },
+    isDeleted: {
+      type: Date,
+      nullable: true,
+      deleteDate: true,
+    }
   },
   relations: {
     request: {
