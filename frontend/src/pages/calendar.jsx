@@ -133,10 +133,10 @@ export function CalendarPage({ user }) {
       if (leaves.length == 1) {
         isLayout = true ; 
         layoutColor = leaveColors[leaves[0].Type];
-        if(new Date(leaves[0].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE") ){
+        if(new Date(leaves[0].from_date).setHours(0,0,0,0) === new Date(dateStr).setHours(0, 0, 0, 0)){
           isLayoutStart = true;
         }
-        if(new Date(leaves[0].to_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
+        if(new Date(leaves[0].to_date).setHours(0,0,0,0) === new Date(dateStr).setHours(0, 0, 0, 0)){
           isLayoutEnd = true;
         }
       }
@@ -144,10 +144,10 @@ export function CalendarPage({ user }) {
         isLayout = true;
         layoutColor = leaveColors.Multiple;
         for(let i=0;i<leaves.length;i++){
-          if(new Date(leaves[i].from_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE") ){
+          if(new Date(leaves[i].from_date).setHours(0,0,0,0) === new Date(dateStr).setHours(0, 0, 0, 0)){
             isLayoutStart = true;
           }
-          if(new Date(leaves[i].to_date).toLocaleDateString("de-DE") === new Date(dateStr).toLocaleDateString("de-DE")){
+          if(new Date(leaves[i].to_date).setHours(0,0,0,0) === new Date(dateStr).setHours(0, 0, 0, 0)){
             isLayoutEnd = true;
           }
         }
