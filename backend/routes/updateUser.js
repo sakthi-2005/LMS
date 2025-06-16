@@ -14,7 +14,6 @@ router.patch("/updateUser", async (req, res) => {
     });
 
     const hashedPassword = await bcrypt.hash(userId.password, 10);
-    userId.password = hashedPassword;
 
     let updated = {
       id: userId.id,
