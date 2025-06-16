@@ -4,9 +4,8 @@ import Spinner from "../utils/Spinner";
 
 export function Profile({ setUser }) {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [password, setPassword] = useState("");
-  const [originalPassword, setOriginalPassword] = useState(password);
+  const [password1, setPassword1] = useState('');
+  const [password2,setPassword2] = useState('')
   const [showProfile, setShowProfile] = useState(true);
   const [userId, setUserId] = useState(
     JSON.parse(localStorage.getItem("user")),
@@ -14,26 +13,28 @@ export function Profile({ setUser }) {
   const [userDetails, setUserDetails] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const handleEditPassword = () => {
-    setIsEditingPassword(true);
-  };
+  useEffect(()=>{
+    if(password1 != '' && password2 != '' && password1 === password2){
+      setIsEditingPassword(false);
+    }
+    else{
+      setIsEditingPassword(true);
+    }
+  },[password1,password2])
 
-  const handleCancelEdit = () => {
-    setPassword(originalPassword);
-    setIsEditingPassword(false);
-    setPasswordVisible(false);
-  };
 
   const handleSavePassword = async () => {
-    setOriginalPassword(password);
+    if(password1 != password2 || password1 == ''){
+      return;
+    }
     setIsEditingPassword(false);
-    setPasswordVisible(false);
 
     await axios
       .patch("/admin/updateUser", {
-        userId: { password: password, id: userId.id },
+        userId: { password: password1, id: userId.id },
       })
       .then((response) => {
+        setShowProfile(false);
         console.log(response.data.status);
       })
       .catch((err) => {
@@ -43,10 +44,6 @@ export function Profile({ setUser }) {
         setShowProfile(false);
         console.log(err);
       });
-  };
-
-  const togglePasswordVisibility = () => {
-    setPasswordVisible((prev) => !prev);
   };
 
   useEffect(() => {
@@ -59,7 +56,6 @@ export function Profile({ setUser }) {
         .then((response) => {
           setLoading(false);
           setUserDetails(response.data.userDetails);
-          setPassword(response.data.userDetails.password);
         })
         .catch((err) => {
           localStorage.removeItem("user");
@@ -136,44 +132,36 @@ export function Profile({ setUser }) {
 
         <div className="profileSectionTitle">Security</div>
         <div className="profileInfoRow profilePasswordRow">
-          <div className="profileLabel">Password:</div>
+          <div className="profileLabel">Change Password:</div>
           <div
             className="profileValue"
             style={{
               display: "flex",
               alignItems: "center",
               position: "relative",
+              flexDirection: "column"
             }}
           >
             <input
-              type={passwordVisible ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={!isEditingPassword}
+              value={password1}
+              onChange={(e) => setPassword1(e.target.value)}
               className="profilePasswordInput"
+              placeholder="Enter Password"
             />
-            <button
-              onClick={togglePasswordVisibility}
-              className="profileTogglePasswordBtn material-icons"
-              title={passwordVisible ? "Hide Password" : "Show Password"}
-            >
-              {passwordVisible ? "visibility_off" : "visibility"}
-            </button>
+            <input
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
+              className="profilePasswordInput"
+              placeholder="Re-Enter password"
+            />
           </div>
         </div>
 
         <div className="profileButtonGroup">
-          {!isEditingPassword ? (
-            <button className="profileBtn edit" onClick={handleEditPassword}>
-              Edit Password
-            </button>
-          ) : (
+          {!isEditingPassword && (
             <>
               <button className="profileBtn save" onClick={handleSavePassword}>
                 Save
-              </button>
-              <button className="profileBtn cancel" onClick={handleCancelEdit}>
-                Cancel
               </button>
             </>
           )}

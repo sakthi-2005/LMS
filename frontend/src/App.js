@@ -10,8 +10,6 @@ import "./App.css";
 import axios from "axios";
 import { Routes , Route , useNavigate } from "react-router-dom";
 
-console.log("Environment Variables:", process.env.REACT_APP_DEFAULT_URL);
-
 axios.defaults.baseURL = process.env.REACT_APP_DEFAULT_URL;
 if (localStorage.getItem("token")) {
   axios.defaults.headers.common["Authorization"] =
