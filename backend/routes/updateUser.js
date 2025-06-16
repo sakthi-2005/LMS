@@ -20,7 +20,6 @@ router.patch("/updateUser", async (req, res) => {
       id: userId.id,
       name: userId.name,
       email: userId.email,
-      password: userId.password ,
       reporting_manager_id: userId.ManagerId || null,
       role_id: position.id,
       isAdmin: userId.isAdmin,
